@@ -124,7 +124,7 @@ class NormalizeCoord(object):
 class NormalizeMy(object):
     def __call__(self, data_dict):
         if "coord" in data_dict.keys():
-            # 归一化处理
+            
             coord = data_dict["coord"]
             bbmin, bbmax = coord.min(0), coord.max(0)
             center, scale = (bbmin + bbmax) * 0.5, 2.0 * 0.9 / (bbmax - bbmin).max()

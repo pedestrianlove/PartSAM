@@ -18,8 +18,6 @@ import json
 import gc
 import time
 from plyfile import PlyData, PlyElement
-import ipdb
-from torchinfo import summary
 
 
 class Model(pl.LightningModule):
@@ -107,13 +105,9 @@ class Model(pl.LightningModule):
         else:
             pc_feat = self.pvcnn(batch['pc'], batch['pc'])
 
-        summary(self.pvcnn, input_size=[(1,100000,3),(1,100000,3)])
 
         planes = pc_feat
         planes = self.triplane_transformer(planes)
-        # ipdb.set_trace()
-        summary(self.triplane_transformer, input_size=(1,3,256,128,128))
-        ipdb.set_trace()
         sdf_planes, part_planes = torch.split(planes, [64, planes.shape[2] - 64], dim=2)
 
         if self.cfg.is_pc:

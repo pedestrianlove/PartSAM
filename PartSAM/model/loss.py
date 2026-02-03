@@ -131,7 +131,6 @@ def compute_jaccard(logits: torch.Tensor, targets: torch.Tensor, eps: float = 1e
 
 def contrast_loss(point_feat: torch.Tensor,logit_scale=1.0):
 
-    # l1_reg = self.l1_loss(point_feat, torch.zeros_like(point_feat)).mean()
 
     featA, featB, featC = torch.split(point_feat, 512, dim=1)
     
@@ -165,18 +164,16 @@ class Criterion(nn.Module):
                 loss_mask, min_loss_idx = loss_mask.min(dim=1)  # [B*M]
                 batch_idx = torch.arange(min_loss_idx.shape[0])
                 best_masks = masks[batch_idx, min_loss_idx]  # [B*M, N]
-                # if step>5000:
+                
                 iou_preds = iou_preds[batch_idx, min_loss_idx]  # [B*M]
-                # else:
-                #     iou_preds = iou_preds
+                
             else:
                 best_masks = masks.squeeze(1)
                 iou_preds = iou_preds.squeeze(1)
             loss_mask = loss_mask.mean()
-            # if step> 5000:
+            
             iou = compute_iou_original(best_masks, gt_masks)  # [B*M]
-            # else:
-            #     iou = compute_iou(masks, gt_masks).squeeze(1)  # [B*M]
+            
             if self.use_soft_iou:
                 with torch.no_grad():
                     soft_iou = compute_jaccard(
@@ -188,8 +185,6 @@ class Criterion(nn.Module):
 
             losses.append(loss_iou * self.iou_loss_weight + loss_mask)
             losses.append(loss_mask)
-            # if i==0 and step <=5000:
-            #     iou=iou[batch_idx, min_loss_idx]
                 
             aux_outputs.append(
                 dict(

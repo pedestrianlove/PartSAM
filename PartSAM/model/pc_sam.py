@@ -56,7 +56,6 @@ class PartSAM(nn.Module):
         prompt_coords: torch.Tensor,
         selected_indices: torch.Tensor,
         prompt_labels: torch.Tensor,
-        mesh_cluster: torch.bool = False,
         prompt_masks: torch.Tensor = None,
         multimask_output: bool = True,
     ):

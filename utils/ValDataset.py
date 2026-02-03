@@ -11,23 +11,18 @@ from utils.point import sample_surface
 
 class ValDataset(Dataset):
     def __init__(self, root_dir, num_points=100000,seed=666):
-        """
-        :param root_dir: 数据集根目录 (包含class_name子目录)
-        :param mode: 数据模式 'train', 'test' 或 'dev'
-        :param num_points: 每个部件采样点数（统一为固定大小）
-        """
         self.seed = seed
         self.mesh_dir = root_dir 
         self.num_points = num_points
-        self.glb_files = []
+        self.files = []
         self.categories = []
         for dirpath, dirnames, filenames in os.walk(self.mesh_dir):
             for filename in filenames:
-                if filename.lower().endswith('.glb') or filename.lower().endswith('.ply'):
-                    self.glb_files.append(os.path.join(dirpath, filename)) 
+                if filename.lower().endswith('.glb') or filename.lower().endswith('.ply') or filename.lower().endswith('.obj'):
+                    self.files.append(os.path.join(dirpath, filename)) 
 
     def __len__(self):
-        return len(self.glb_files)
+        return len(self.files)
 
     def _sample_points(self, mesh: trimesh.Trimesh) -> np.ndarray:
         points, point_to_face,colors = sample_surface(mesh,count = self.num_points, sample_color=True,seed = self.seed)
@@ -36,23 +31,22 @@ class ValDataset(Dataset):
             colors = np.full((points.shape[0], 3), 192, dtype=np.uint8)
         colors = colors[:,:3]
 
-
-        # 提取每个点的法向量（取采样点所在面的法向量）
         if hasattr(mesh, 'face_normals') and mesh.face_normals is not None:
             normals = mesh.face_normals[point_to_face]
         else:
-            # 没有法向量信息则用全1
             normals = np.ones((points.shape[0], 3), dtype=np.float32)
 
         return points, colors, normals, point_to_face
 
     
     def __getitem__(self, idx):
-        mesh_dir = self.glb_files[idx]
+        mesh_dir = self.files[idx]
         if  mesh_dir.lower().endswith('.glb'):
             mesh = trimesh.load(mesh_dir, force='mesh', file_type='glb')
-        else:
+        elif mesh_dir.lower().endswith('.ply'):
             mesh = trimesh.load(mesh_dir, force='mesh', file_type='ply')
+        else:
+            mesh = trimesh.load(mesh_dir, force='mesh', file_type='obj')
         mesh_id = os.path.splitext(os.path.basename(mesh_dir))[0]
 
         vertices = mesh.vertices
@@ -63,7 +57,7 @@ class ValDataset(Dataset):
         points, colors, normals, point_to_face = self._sample_points(mesh)
             
         return {
-            'coords': points,  # [num_points, 3]
+            'coords': points,  
             'normal': normals,
             'color': colors,
             'point_to_face': torch.from_numpy(point_to_face),
@@ -73,8 +67,6 @@ class ValDataset(Dataset):
         }
     
 def prep_points_train(xyz,color, normal, vertices, eval=False):
-    # xyz, rgb, normal all (n,3) numpy arrays
-    # rgb is 0-255
     data_dict = {"coord": xyz,"color":color,"normal": normal, "vertices": vertices}
     data_dict = CenterShift(apply_z=True)(data_dict)
     if not eval:
@@ -95,7 +87,6 @@ def prep_points_train(xyz,color, normal, vertices, eval=False):
     return data_dict
 
 def collate_fn_eval(batch):
-    # batch: list of dicts, each with 'coords': [N,3], 'features': [N,3], 'gt_masks': [M,N]
     all_coords = []
     all_normals = []
     all_colors = []

@@ -10,7 +10,7 @@
 <br>
 &dagger; Corresponding authors
 
-**Affiliations:**
+
 <sup>1</sup> Nanjing University of Aeronautics and Astronautics
 <sup>2</sup> Hong Kong University of Science and Technology 
 <sup>3</sup> The University of Hong Kong
@@ -35,23 +35,59 @@
 
 
 
-## Abstract
+## Installation
+1. Install the required environment
+```
+conda create -n PartSAM python=3.11 -y
+conda activate PartSAM
+# PyTorch 2.4.1 with CUDA 12.4
+pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu124
+pip install lightning==2.2 h5py yacs trimesh scikit-image loguru boto3
+pip install mesh2sdf tetgen pymeshlab plyfile einops libigl polyscope potpourri3d simple_parsing arrgh open3d safetensors
+pip install torch-scatter -f https://data.pyg.org/whl/torch-2.4.1+cu124.html
+apt install libx11-6 libgl1 libxrender1
+pip install vtk
+```
 
-Segmenting 3D objects into parts is a long-standing challenge in computer vision. To overcome taxonomy constraints and generalize to unseen 3D objects, recent works turn to open-world part segmentation. These approaches typically transfer supervision from 2D foundation models, such as SAM, by lifting multi-view masks into 3D. However, this indirect paradigm fails to capture intrinsic geometry, leading to surface-only understanding, uncontrolled decomposition, and limited generalization. We present PartSAM, the first promptable part segmentation model trained natively on large-scale 3D data. Following the design philosophy of SAM, PartSAM employs an encoder-decoder architecture in which a triplane-based dual-branch encoder produces spatially structured tokens for scalable part-aware representation learning. To enable large-scale supervision, we further introduce a model-in-the-loop annotation pipeline that curates over five million 3D shape-part pairs from online assets, providing diverse and fine-grained labels. This combination of scalable architecture and diverse 3D data yields emergent open-world capabilities: with a single prompt, PartSAM achieves highly accurate part identification, and in a Segment-Every-Part mode, it automatically decomposes shapes into both surface and internal structures. Extensive experiments show that PartSAM outperforms state-of-the-art methods by large margins across multiple benchmarks, marking a decisive step toward foundation models for 3D part understanding. Our code and model will be released soon.
+2. Install other third party modules following [Point-SAM](https://github.com/zyc00/Point-SAM)
+
+3. Install the pretrained model weight
+```
+pip install -U "huggingface_hub[cli]"
+huggingface-cli login
+huggingface-cli download Czvvd/PartSAM --local-dir ./pretrained
+```
+
+## Usage
+```
+# Modify the config file to evaluate your own meshes
+python evaluation/eval_everypart.py
+```
 
 ## TODO
-- [ ] Release inference code of PartSAM
-- [ ] Realse the pre-trained models
+- [x] Release inference code of PartSAM
+- [x] Release the pre-trained models
+- [ ] Release training code and data processing script
+
+## Acknowledgement
+Our code is based on these wonderful works:
+* [Point-SAM](https://github.com/zyc00/Point-SAM)
+* [PartField](https://github.com/nv-tlabs/PartField)
+* [SAMPart3D](https://github.com/Pointcept/SAMPart3D)
+* [SAMesh](https://github.com/gtangg12/samesh)
+* [Find3D](https://github.com/ziqi-ma/Find3D)
+
+We thank the authors for their great work！
+
+
 
 ## Citation
 
-If you find this work useful, please cite our paper:
-
 ```bibtex
 @article{zhu2025partsam,
-      title={PartSAM: A Scalable Promptable Part Segmentation Model Trained on Native 3D Data}, 
-      author={Zhe Zhu and Le Wan and Rui Xu and Yiheng Zhang and Honghua Chen and Zhiyang Dou and Cheng Lin and Yuan Liu and Mingqiang Wei},
-      journal={arXiv preprint arXiv:2509.21965},
-      year={2025}
+  title={PartSAM: A Scalable Promptable Part Segmentation Model Trained on Native 3D Data}, 
+  author={Zhe Zhu and Le Wan and Rui Xu and Yiheng Zhang and Honghua Chen and Zhiyang Dou and Cheng Lin and Yuan Liu and Mingqiang Wei},
+  journal={arXiv preprint arXiv:2509.21965},
+  year={2025}
 }
 ```
