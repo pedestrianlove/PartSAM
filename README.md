@@ -44,12 +44,13 @@ conda activate PartSAM
 pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu124
 pip install lightning==2.2 h5py yacs trimesh scikit-image loguru boto3
 pip install mesh2sdf tetgen pymeshlab plyfile einops libigl polyscope potpourri3d simple_parsing arrgh open3d safetensors
+pip install hydra-core omegaconf accelerate timm igraph ninja
 pip install torch-scatter -f https://data.pyg.org/whl/torch-2.4.1+cu124.html
 apt install libx11-6 libgl1 libxrender1
 pip install vtk
 ```
 
-2. Install other third party modules following [Point-SAM](https://github.com/zyc00/Point-SAM)
+2. Install other third-party modules (torkit3d and apex) following [Point-SAM](https://github.com/zyc00/Point-SAM)
 
 3. Install the pretrained model weight
 ```
