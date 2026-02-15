@@ -2,6 +2,8 @@
 
 # PartSAM: A Scalable Promptable Part Segmentation Model Trained on Native 3D Data
 
+### ICLR 2026
+
 </div>
 
 <div align="center">
@@ -11,12 +13,12 @@
 &dagger; Corresponding authors
 
 
-<sup>1</sup> Nanjing University of Aeronautics and Astronautics
-<sup>2</sup> Hong Kong University of Science and Technology 
-<sup>3</sup> The University of Hong Kong
-<sup>4</sup> National University of Singapore
-<sup>5</sup> Lingnan University
-<sup>6</sup> Macau University of Science and Technology
+<sup>1</sup> NUAA
+<sup>2</sup> HKUST
+<sup>3</sup> HKU
+<sup>4</sup> NUS
+<sup>5</sup> LU
+<sup>6</sup> MUST
 
 
 <p align="center">
