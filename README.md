@@ -2,8 +2,6 @@
 
 # PartSAM: A Scalable Promptable Part Segmentation Model Trained on Native 3D Data
 
-### ICLR 2026
-
 </div>
 
 <div align="center">
