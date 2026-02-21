@@ -50,7 +50,9 @@ apt install libx11-6 libgl1 libxrender1
 pip install vtk
 ```
 
-2. Install other third-party modules (torkit3d and apex) following [Point-SAM](https://github.com/zyc00/Point-SAM)
+2. Install the other third-party dependencies as follows:
+- **torkit3d** and **apex**: follow the installation instructions provided in [Point-SAM](https://github.com/zyc00/Point-SAM).
+- **pointops**: install according to [SAMPart3D](https://github.com/Pointcept/SAMPart3D).
 
 3. Install the pretrained model weight
 ```
