@@ -1,13 +1,31 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
+
+#SBATCH --account=MST114546
+#SBATCH --partition=normal
+#SBATCH --job-name=setup-project-data-h100
+#SBATCH --dependency=singleton
+#SBATCH --output=logs/%x-%j.out
+#SBATCH --error=logs/%x-%j.err
+#SBATCH --switches=1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=7
+#SBATCH --gpus-per-node=1
+#SBATCH --time=12:00:00
+#SBATCH --mem=90G
+#SBATCH --mail-user=alan0502@gapp.nthu.edu.tw
+#SBATCH --mail-type=ALL
 
 ## 1. Install torkit3d and apex
 bash scripts/clone-or-pull.sh https://github.com/zyc00/Point-SAM third_party/Point-SAM
 
-git submodule update --init third_party/Point-SAM/third_party/torkit3d
+pushd third_party/Point-SAM
+git submodule update --init third_party/torkit3d
 FORCE_CUDA=1 pip install --no-build-isolation third_party/torkit3d
 
-git submodule update --init third_party/Point-SAM/third_party/apex
+git submodule update --init third_party/apex
 pip install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --config-settings "--build-option=--cpp_ext" --config-settings "--build-option=--cuda_ext" third_party/apex
+popd
 
 ## 2. Install PointOps
 bash scripts/clone-or-pull.sh https://github.com/Pointcept/SAMPart3D third_party/SAMPart3D

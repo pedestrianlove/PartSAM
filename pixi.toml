@@ -5,8 +5,11 @@ name = "PartSAM"
 platforms = ["linux-64"]
 version = "0.1.0"
 
+[activation.env]
+TORCH_CUDA_ARCH_LIST = "9.0"
+
 [tasks]
-build = { cmd = "bash scripts/build-deps.sh" }
+build = { cmd = "bash scripts/build.batch" }
 eval = { cmd = "python evaluation/eval_everypart.py" }
 
 
@@ -49,4 +52,5 @@ vtk = ">=9.6.0, <10"
 torch-scatter = { url = "https://data.pyg.org/whl/torch-2.4.0%2Bcu124/torch_scatter-2.1.2%2Bpt24cu124-cp311-cp311-linux_x86_64.whl" }
 huggingface-hub = { version = ">=1.5.0, <2", extras = ["cli"] }
 spconv-cu124 = ">=2.3.8, <3"
+pip = ">=26.0.1, <27"
 
