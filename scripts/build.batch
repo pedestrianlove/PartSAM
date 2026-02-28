@@ -35,4 +35,4 @@ python setup.py install
 popd
 
 # spconv-cu124 already installed with pixi
-pip install flash-attn --no-build-isolation
+# pip install flash-attn --no-build-isolation
